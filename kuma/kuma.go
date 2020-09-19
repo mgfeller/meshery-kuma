@@ -11,7 +11,7 @@ import (
 
 	"github.com/layer5io/gokit/logger"
 	"github.com/layer5io/gokit/models"
-	"github.com/layer5io/meshery-kuma/internal/config"
+	"github.com/mgfeller/common-adapter-library/config"
 )
 
 // Handler provides the methods supported by the adapter

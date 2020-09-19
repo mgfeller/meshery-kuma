@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"github.com/mgfeller/common-adapter-library/config"
 	"os"
 
 	"github.com/layer5io/gokit/utils"
@@ -13,7 +14,7 @@ type Local struct {
 }
 
 // NewLocal intializes a local instance and dependencies
-func NewLocal() (Handler, error) {
+func NewLocal() (config.Handler, error) {
 	return &Local{
 		store: make(map[string]string),
 	}, nil

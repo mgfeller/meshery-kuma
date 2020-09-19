@@ -11,7 +11,7 @@ type Viper struct {
 }
 
 // NewViper intializes a viper instance and dependencies
-func NewViper() (Handler, error) {
+func NewViper() (config.Handler, error) {
 	v := viper.New()
 	v.AddConfigPath(filepath)
 	v.SetConfigType(filetype)
