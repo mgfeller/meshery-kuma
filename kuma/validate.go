@@ -7,11 +7,13 @@ import (
 	"strings"
 
 	"github.com/layer5io/gokit/smi"
+
+	"github.com/mgfeller/common-adapter-library/adapter"
 )
 
-func (h *handler) validateSMIConformance(id string) error {
+func (h *KumaAdapter) validateSMIConformance(id string) error {
 
-	e := &Event{
+	e := &adapter.Event{
 		Operationid: id,
 		Summary:     "Deploying",
 		Details:     "None",
@@ -21,7 +23,7 @@ func (h *handler) validateSMIConformance(id string) error {
 		"kuma.io/gateway": "enabled",
 	}
 
-	test, err := smi.New(context.TODO(), strings.ToLower(h.GetName()), h.kubeClient)
+	test, err := smi.New(context.TODO(), strings.ToLower(h.GetName()), h.KubeClient)
 	if err != nil {
 		e.Summary = "Error while creating smi-conformance tool"
 		e.Details = err.Error()

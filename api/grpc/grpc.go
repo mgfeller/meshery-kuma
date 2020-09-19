@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"fmt"
+	"github.com/mgfeller/common-adapter-library/adapter"
 	"net"
 	"time"
 
@@ -13,7 +14,6 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/layer5io/meshery-kuma/internal/tracing"
-	"github.com/layer5io/meshery-kuma/kuma"
 	"github.com/layer5io/meshery-kuma/meshes"
 )
 
@@ -24,7 +24,7 @@ type Service struct {
 	Version   string    `json:"version"`
 	StartedAt time.Time `json:"startedat,string"`
 	TraceURL  string    `json:"traceurl"`
-	Handler   kuma.Handler
+	Handler   adapter.Handler
 	Channel   chan interface{}
 }
 

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+
+	"github.com/mgfeller/common-adapter-library/adapter"
 )
 
 // MeshInstance holds the information of the instance of the mesh
@@ -17,7 +19,7 @@ type MeshInstance struct {
 }
 
 // CreateInstance installs and creates a mesh environment up and running
-func (h *handler) installKuma(del bool, version string) (string, error) {
+func (h *KumaAdapter) installKuma(del bool, version string) (string, error) {
 	status := "installing"
 
 	if del {
@@ -27,30 +29,30 @@ func (h *handler) installKuma(del bool, version string) (string, error) {
 	meshinstance := &MeshInstance{
 		InstallVersion: version,
 	}
-	err := h.config.MeshInstance(meshinstance)
+	err := h.Config.MeshInstance(meshinstance)
 	if err != nil {
-		return status, ErrMeshConfig(err)
+		return status, adapter.ErrMeshConfig(err)
 	}
 
-	h.log.Info("Installing Kuma")
+	h.Log.Info("Installing Kuma")
 	err = meshinstance.installUsingKumactl(del)
 	if err != nil {
-		h.log.Err("Kuma installation failed", ErrInstallMesh(err).Error())
-		return status, ErrInstallMesh(err)
+		h.Log.Err("Kuma installation failed", adapter.ErrInstallMesh(err).Error())
+		return status, adapter.ErrInstallMesh(err)
 	}
 
-	h.log.Info("Port forwarding")
+	h.Log.Info("Port forwarding")
 	err = meshinstance.portForward()
 	if err != nil {
-		h.log.Err("Kuma portforwarding failed", ErrPortForward(err).Error())
-		return status, ErrPortForward(err)
+		h.Log.Err("Kuma portforwarding failed", adapter.ErrPortForward(err).Error())
+		return status, adapter.ErrPortForward(err)
 	}
 
 	return "deployed", nil
 }
 
 // installSampleApp installs and creates a sample bookinfo application up and running
-func (h *handler) installSampleApp(name string) (string, error) {
+func (h *KumaAdapter) installSampleApp(name string) (string, error) {
 	// Needs implementation
 	return "deployed", nil
 }

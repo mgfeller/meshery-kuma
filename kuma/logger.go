@@ -3,17 +3,19 @@ package kuma
 import (
 	"context"
 	"fmt"
+	"github.com/mgfeller/common-adapter-library/adapter"
 
 	"github.com/layer5io/gokit/errors"
 	"github.com/layer5io/gokit/logger"
 )
 
 type loggingService struct {
+	KumaAdapter
 	log  logger.Handler
-	next Handler
+	next adapter.Handler
 }
 
-func AddLogger(logger logger.Handler, h Handler) Handler {
+func AddLogger(logger logger.Handler, h adapter.Handler) adapter.Handler {
 	return &loggingService{
 		log:  logger,
 		next: h,
@@ -42,7 +44,7 @@ func (s *loggingService) ApplyOperation(ctx context.Context, op string, id strin
 	return err
 }
 
-func (s *loggingService) ListOperations() (Operations, error) {
+func (s *loggingService) ListOperations() (adapter.Operations, error) {
 	s.log.Info("Listing Operations")
 	ops, err := s.next.ListOperations()
 	if err != nil {
@@ -51,10 +53,10 @@ func (s *loggingService) ListOperations() (Operations, error) {
 	return ops, err
 }
 
-func (s *loggingService) StreamErr(e *Event, err error) {
+func (s *loggingService) StreamErr(e *adapter.Event, err error) {
 	s.log.Err("Sending error event", err.Error())
 }
 
-func (s *loggingService) StreamInfo(*Event) {
+func (s *loggingService) StreamInfo(*adapter.Event) {
 	s.log.Info("Sending event")
 }

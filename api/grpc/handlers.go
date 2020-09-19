@@ -4,8 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/layer5io/meshery-kuma/kuma"
 	"github.com/layer5io/meshery-kuma/meshes"
+
+	"github.com/mgfeller/common-adapter-library/adapter"
 )
 
 // CreateMeshInstance is the handler function for the method CreateMeshInstance.
@@ -69,10 +70,10 @@ func (s *Service) StreamEvents(ctx *meshes.EventsRequest, srv meshes.MeshService
 		select {
 		case data := <-s.Channel:
 			event := &meshes.EventsResponse{
-				OperationId: data.(*kuma.Event).Operationid,
-				EventType:   meshes.EventType(data.(*kuma.Event).EType),
-				Summary:     data.(*kuma.Event).Summary,
-				Details:     data.(*kuma.Event).Details,
+				OperationId: data.(*adapter.Event).Operationid,
+				EventType:   meshes.EventType(data.(*adapter.Event).EType),
+				Summary:     data.(*adapter.Event).Summary,
+				Details:     data.(*adapter.Event).Details,
 			}
 			if err := srv.Send(event); err != nil {
 				// to prevent loosing the event, will re-add to the channel

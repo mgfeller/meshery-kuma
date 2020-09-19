@@ -5,28 +5,20 @@ import (
 	"fmt"
 
 	cfg "github.com/layer5io/meshery-kuma/internal/config"
+	"github.com/mgfeller/common-adapter-library/adapter"
 )
 
-// Operation holds the informormation for list of operations
-type Operation struct {
-	Type       int32             `json:"type,string,omitempty"`
-	Properties map[string]string `json:"properties,omitempty"`
-}
-
-// Operations hold a map of Operation objects
-type Operations map[string]*Operation
-
 // ApplyOperation applies the operation on kuma
-func (h *handler) ApplyOperation(ctx context.Context, op string, id string, del bool) error {
+func (h *KumaAdapter) ApplyOperation(ctx context.Context, op string, id string, del bool) error {
 
-	operations := make(Operations, 0)
-	err := h.config.Operations(&operations)
+	operations := make(adapter.Operations, 0)
+	err := h.Config.Operations(&operations)
 	if err != nil {
 		return err
 	}
 
 	status := "deploying"
-	e := &Event{
+	e := &adapter.Event{
 		Operationid: id,
 		Summary:     "Deploying",
 		Details:     "None",
@@ -34,7 +26,7 @@ func (h *handler) ApplyOperation(ctx context.Context, op string, id string, del 
 
 	switch op {
 	case cfg.InstallKumav071, cfg.InstallKumav070, cfg.InstallKumav060:
-		go func(hh *handler, ee *Event) {
+		go func(hh *KumaAdapter, ee *adapter.Event) {
 			if status, err := hh.installKuma(del, operations[op].Properties["version"]); err != nil {
 				e.Summary = fmt.Sprintf("Error while %s Kuma service mesh", status)
 				e.Details = err.Error()
@@ -46,7 +38,7 @@ func (h *handler) ApplyOperation(ctx context.Context, op string, id string, del 
 			hh.StreamInfo(e)
 		}(h, e)
 	case cfg.InstallSampleBookInfo:
-		go func(hh *handler, ee *Event) {
+		go func(hh *KumaAdapter, ee *adapter.Event) {
 			if status, err := hh.installSampleApp(operations[op].Properties["description"]); err != nil {
 				e.Summary = fmt.Sprintf("Error while %s Sample %s application", status, operations[op].Properties["description"])
 				e.Details = err.Error()
@@ -58,25 +50,15 @@ func (h *handler) ApplyOperation(ctx context.Context, op string, id string, del 
 			hh.StreamInfo(e)
 		}(h, e)
 	case cfg.ValidateSmiConformance:
-		go func(hh *handler, ee *Event) {
+		go func(hh *KumaAdapter, ee *adapter.Event) {
 			err := hh.validateSMIConformance(ee.Operationid)
 			if err != nil {
 				return
 			}
 		}(h, e)
 	default:
-		h.StreamErr(e, ErrOpInvalid)
+		h.StreamErr(e, adapter.ErrOpInvalid)
 	}
 
 	return nil
-}
-
-// ListOperations lists the operations available
-func (h *handler) ListOperations() (Operations, error) {
-	operations := make(Operations, 0)
-	err := h.config.Operations(&operations)
-	if err != nil {
-		return nil, err
-	}
-	return operations, nil
 }
