@@ -2,13 +2,18 @@ module github.com/layer5io/meshery-kuma
 
 go 1.13
 
-replace github.com/kudobuilder/kuttl => github.com/layer5io/kuttl v0.4.1-0.20200806180306-b7e46afd657f
+replace (
+	github.com/kudobuilder/kuttl => github.com/layer5io/kuttl v0.4.1-0.20200806180306-b7e46afd657f
+
+	github.com/mgfeller/common-adapter-library => ../common-adapter-library
+)
 
 require (
 	github.com/golang/protobuf v1.4.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
 	github.com/layer5io/gokit v0.0.0-20200903172320-9df3e7bc469c
 	github.com/layer5io/learn-layer5/smi-conformance v0.0.0-20200825194222-14309c02bff2 // indirect
+	github.com/mgfeller/common-adapter-library v0.0.0-00010101000000-000000000000
 	github.com/spf13/viper v1.7.0
 	go.opentelemetry.io/otel v0.10.0
 	go.opentelemetry.io/otel/exporters/trace/jaeger v0.10.0

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/mgfeller/common-adapter-library/config"
 	"github.com/spf13/viper"
 )
 
@@ -23,7 +24,7 @@ func NewViper() (Handler, error) {
 	err := v.ReadInConfig()
 	return &Viper{
 		instance: v,
-	}, ErrViper(err)
+	}, config.ErrViper(err)
 }
 
 // SetKey sets a key value in viper

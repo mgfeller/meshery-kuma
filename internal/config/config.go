@@ -1,5 +1,9 @@
 package config
 
+import (
+	"github.com/mgfeller/common-adapter-library/config"
+)
+
 // Handler is the handler interface for config
 type Handler interface {
 
@@ -30,5 +34,5 @@ func New(name string) (Handler, error) {
 	case "viper":
 		return NewViper()
 	}
-	return nil, ErrEmptyConfig
+	return nil, config.ErrEmptyConfig
 }
