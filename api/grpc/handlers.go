@@ -7,6 +7,7 @@ import (
 	"github.com/layer5io/meshery-kuma/meshes"
 
 	"github.com/mgfeller/common-adapter-library/adapter"
+	l5apigrpc "github.com/mgfeller/common-adapter-library/api/grpc"
 )
 
 // CreateMeshInstance is the handler function for the method CreateMeshInstance.
@@ -29,7 +30,7 @@ func (s *Service) MeshName(ctx context.Context, req *meshes.MeshNameRequest) (*m
 func (s *Service) ApplyOperation(ctx context.Context, req *meshes.ApplyRuleRequest) (*meshes.ApplyRuleResponse, error) {
 
 	if req == nil {
-		return nil, ErrRequestInvalid
+		return nil, l5apigrpc.ErrRequestInvalid
 	}
 
 	err := s.Handler.ApplyOperation(ctx, req.OpName, req.OperationId, req.DeleteOp)

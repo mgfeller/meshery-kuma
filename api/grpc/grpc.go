@@ -3,6 +3,7 @@ package grpc
 import (
 	"fmt"
 	"github.com/mgfeller/common-adapter-library/adapter"
+	l5apigrpc "github.com/mgfeller/common-adapter-library/api/grpc"
 	"net"
 	"time"
 
@@ -31,7 +32,7 @@ type Service struct {
 // panicHandler is the handler function to handle panic errors
 func panicHandler(r interface{}) error {
 	fmt.Println("600 Error")
-	return ErrPanic(r)
+	return l5apigrpc.ErrPanic(r)
 }
 
 // Start starts grpc server
@@ -40,7 +41,7 @@ func Start(s *Service, tr tracing.Handler) error {
 	address := fmt.Sprintf(":%s", s.Port)
 	listener, err := net.Listen("tcp", address)
 	if err != nil {
-		return ErrGrpcListener(err)
+		return l5apigrpc.ErrGrpcListener(err)
 	}
 
 	middlewares := middleware.ChainUnaryServer(
@@ -63,7 +64,7 @@ func Start(s *Service, tr tracing.Handler) error {
 
 	// Start serving requests
 	if err = server.Serve(listener); err != nil {
-		return ErrGrpcServer(err)
+		return l5apigrpc.ErrGrpcServer(err)
 	}
 	return nil
 
