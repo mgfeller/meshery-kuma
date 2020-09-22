@@ -2,14 +2,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/mgfeller/common-adapter-library/api/grpc"
+	"github.com/mgfeller/common-adapter-library/api/tracing"
 	"os"
 	"time"
 
 	"github.com/layer5io/gokit/logger"
 	"github.com/layer5io/gokit/utils"
-	"github.com/layer5io/meshery-kuma/api/grpc"
 	"github.com/layer5io/meshery-kuma/internal/config"
-	"github.com/layer5io/meshery-kuma/internal/tracing"
 	"github.com/layer5io/meshery-kuma/kuma"
 )
 

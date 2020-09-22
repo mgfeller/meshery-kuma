@@ -3,9 +3,9 @@ package tracing
 import (
 	"context"
 
-	"go.opentelemetry.io/otel/api/kv"
 	apitrace "go.opentelemetry.io/otel/api/trace"
 	"go.opentelemetry.io/otel/exporters/trace/jaeger"
+	"go.opentelemetry.io/otel/label"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 )
 
@@ -40,9 +40,9 @@ func New(service string, endpoint string) (Handler, error) {
 		jaeger.WithCollectorEndpoint(endpoint),
 		jaeger.WithProcess(jaeger.Process{
 			ServiceName: service,
-			Tags: []kv.KeyValue{
-				kv.Key("name").String(service),
-				kv.Key("exporter").String("jaeger"),
+			Tags: []label.KeyValue{
+				label.Key("name").String(service),
+				label.Key("exporter").String("jaeger"),
 			},
 		}),
 		jaeger.WithSDK(&sdktrace.Config{DefaultSampler: sdktrace.AlwaysSample()}),
@@ -67,9 +67,9 @@ func (h *handler) Span(ctx context.Context) {
 }
 
 func (h *handler) AddEvent(name string, attrs ...*KeyValue) {
-	kvstore := make([]kv.KeyValue, 0)
+	kvstore := make([]label.KeyValue, 0)
 	for _, attr := range attrs {
-		kvstore = append(kvstore, kv.String(attr.Key, attr.Value))
+		kvstore = append(kvstore, label.String(attr.Key, attr.Value))
 	}
 
 	h.span.AddEvent(h.context, name, kvstore...)
