@@ -49,13 +49,6 @@ func (h *KumaAdapter) ApplyOperation(ctx context.Context, op string, id string, 
 			ee.Details = fmt.Sprintf("The Sample %s application is now %s.", operations[op].Properties["description"], status)
 			hh.StreamInfo(e)
 		}(h, e)
-	case cfg.ValidateSmiConformance:
-		go func(hh *KumaAdapter, ee *adapter.Event) {
-			err := hh.validateSMIConformance(ee.Operationid)
-			if err != nil {
-				return
-			}
-		}(h, e)
 	default:
 		h.StreamErr(e, adapter.ErrOpInvalid)
 	}
